@@ -4,7 +4,7 @@ Template.day.helpers(
     me = this.parent.first[this.index]
     dayBeginning = me.timestamp
     dayEnd = me.timestamp + 86400
-    mongoQuery = { dueDate: { $gte: dayBeginning, $lt: dayEnd} }
+    mongoQuery = { parent: { $exists: false },  dueDate: { $gte: dayBeginning, $lt: dayEnd} }
     tasks = Tasks.find(mongoQuery, { sort: { due: -1 } }).fetch()
     totalTime = 0
     for task in tasks
@@ -23,7 +23,7 @@ Template.day.helpers(
     dayBeginning = me.timestamp
     dayEnd = me.timestamp + 86400
     # build query
-    mongoQuery = { dueDate: { $gte: dayBeginning, $lt: dayEnd} }
+    mongoQuery = { parent: { $exists: false }, dueDate: { $gte: dayBeginning, $lt: dayEnd} }
     # find relevant tasks
     tasks = Tasks.find(mongoQuery, { sort: { due: -1 } }).fetch()
     this.count = tasks.length

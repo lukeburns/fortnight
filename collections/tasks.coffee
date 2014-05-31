@@ -9,6 +9,23 @@ Meteor.methods(
   makeTask: (taskAttributes)->
     user = Meteor.user()
 
+    if taskAttributes.parent
+      parent = Tasks.findOne({_id: taskAttributes.parent})
+
+      taskWithSameDate = Tasks.findOne(
+        dueDate: taskAttributes.dueDate + 43200
+        parent: taskAttributes.parent
+      )
+
+      if taskWithSameDate
+        console.log 'Plan already exists!'
+        return
+        # TODO: Gracefully handle error popups
+        # throw new Meteor.Error(302, 'Plan already exists!', planWithSameDate._id)
+
+      taskAttributes.name = parent.name if !taskAttributes.name?
+      taskAttributes.estimate = parent.estimate if !taskAttributes.estimate?
+
     # user must be logged in
     if not user
       throw new Meteor.Error(401, "You need to log in to create tasks")
@@ -25,16 +42,21 @@ Meteor.methods(
     # convert estimate to seconds
     taskAttributes.duration = parseDuration(taskAttributes.estimate)
 
-    task = _.extend(_.pick(taskAttributes, 'name', 'dueDate', 'estimate', 'duration'),
+    console.log(taskAttributes)
+
+    task = _.extend(_.pick(taskAttributes, 'name', 'dueDate', 'estimate', 'duration', 'parent'),
       userId: user._id
       completed: false
-      parent: null
       children: []
     )
 
     task.dueDate += 43200 # put it in the middle of the day because fuck DST
 
     taskId = Tasks.insert(task)
+
+    if(parent)
+      Tasks.update({_id: taskAttributes.parent}, {$push: {children: taskId}})
+
     taskId
 
   completeTask: (taskId)->
@@ -78,13 +100,22 @@ Meteor.methods(
       $set: {name: new_name, duration: new_duration, estimate: new_estimate}
     })
 
-  deleteMe: (taskId)->
+  deleteTask: (taskId)->
     user = Meteor.user()
     if not user
-      throw new Meteor.Error(401, "You need to login to uncomplete a task")
+      throw new Meteor.Error(401, "You need to login to delete a task")
 
+    # Remove children
+    task = Tasks.findOne({_id: taskId});
+    if task.children?
+      task.children.forEach (child) ->
+        Tasks.remove({_id: child});
+
+    # Abandon parents
+    Tasks.update({children: taskId}, {$pull: {children: taskId}})
+
+    # Remove self
     Tasks.remove({_id: taskId})
-    Plans.remove({taskId: taskId})
 
 )
 

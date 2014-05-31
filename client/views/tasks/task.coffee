@@ -44,7 +44,7 @@ Template.task.events(
       swapBack(this, 'key')
 
   'click .deleteTask':(e)->
-    Meteor.call('deleteMe', @_id)
+    Meteor.call('deleteTask', @_id)
 )
 
 swapBack = (task, which)->

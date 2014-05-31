@@ -209,12 +209,12 @@ Template.homePage.events(
           buckets[dayNumber].plans.push('new plan')
         else
           # prioritize least full
-          info =
+          plan =
             id: task._id
             timestamp: buckets[leastFull].timestamp[0]
           buckets[leastFull].plans.push('new plan')
 
-        Meteor.call('makePlan', info, (error, id)->
+        Meteor.call('makePlan', plan, (error, id)->
           if error
             Errors.throw(error.reason)
 
@@ -264,12 +264,12 @@ Template.homePage.events(
         buckets[5].plans.push('new plan')
       else
         # prioritize least full
-        info =
+        plan =
           id: thisTask._id
           timestamp: buckets[leastFull].timestamp[0]
         buckets[leastFull].plans.push('new plan')
 
-      Meteor.call('makePlan', info, (error, id)->
+      Meteor.call('makePlan', plan, (error, id)->
         if error
           Errors.throw(error.reason)
 

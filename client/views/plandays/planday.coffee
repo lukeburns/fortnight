@@ -5,9 +5,9 @@ Template.planday.helpers(
     dayBeginning = me.timestamp
     dayEnd = me.timestamp + 86400
     # build query
-    mongoQuery = { timestamp: { $gte: dayBeginning, $lt: dayEnd} }
+    mongoQuery = { parent: {$exists: true}, dueDate: { $gte: dayBeginning, $lt: dayEnd} }
     # find relevant tasks
-    plans = Plans.find(mongoQuery, { sort: { timestamp: -1 } }).fetch()
+    plans = Tasks.find(mongoQuery, { sort: { dueDate: -1 } }).fetch()
     plans
 
   name: ()->
@@ -23,10 +23,10 @@ Template.planday.rendered = ()->
     hoverClass: 'ui-state-active'
     drop: (event, ui)->
       id = ui.draggable.attr('id')
-      info =
-        id: id
-        timestamp: timestamp
-      Meteor.call('makePlan', info, (error,id)->
+      plan =
+        parent: id
+        dueDate: timestamp
+      Meteor.call('makeTask', plan, (error,id)->
         if error
           Errors.throw(error.reason)
 
