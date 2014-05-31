@@ -1,5 +1,5 @@
 Router.configure
-  before: clearErrors
+  onBeforeAction: clearErrors
   loadingTemplate: 'loading'
   layoutTemplate: 'layout'
   # waitOn: ->
@@ -25,19 +25,19 @@ Router.map ->
   @route 'loginPage',
     path: '/login'
     layoutTemplate: 'layout'
-    before: ->
+    onBeforeAction: ->
       Session.set('entryError', undefined)
       Session.set('buttonText', 'in')
 
   @route "registerPage",
     path: "/register"
-    before: ->
+    onBeforeAction: ->
       Session.set('entryError', undefined)
       Session.set('buttonText', 'up')
 
   @route 'logout',
     path: '/logout'
-    before: ->
+    onBeforeAction: ->
       Session.set('entryError', undefined)
       if AccountsEntry.settings.homeRoute
         Meteor.logout()
@@ -62,4 +62,4 @@ requireLogin = ()->
 
     @stop()
 
-Router.before(()-> clearErrors())
+Router.onBeforeAction(()-> clearErrors())

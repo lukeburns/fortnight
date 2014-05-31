@@ -1,5 +1,5 @@
-Handlebars.registerHelper "modAcctButtons", ->
-    return new Handlebars.SafeString(Template.modAcctButtons())
+UI.registerHelper "modAcctButtons", ->
+    return new Spacebars.SafeString(Template.modAcctButtons)
 
 Template.modAcctButtons.helpers
   profileUrl: ->
