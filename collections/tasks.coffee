@@ -28,7 +28,8 @@ Meteor.methods(
     task = _.extend(_.pick(taskAttributes, 'name', 'dueDate', 'estimate', 'duration'),
       userId: user._id
       completed: false
-      planDates: []
+      parent: null
+      children: []
     )
 
     task.dueDate += 43200 # put it in the middle of the day because fuck DST

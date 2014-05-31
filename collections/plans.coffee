@@ -30,7 +30,7 @@ Meteor.methods(
       completed: false
       timestamp: planAttributes.timestamp + 43200 # because DST, to set the time in the middle of the day
       userId: user._id
-    planId = Plans.insert(plan)
+    planId = Plans.insert(plan, -> Tasks.update({_id:planAttributes.id}, {$push: {children: planId}}))
     planId
   completePlan: (planId)->
     user = Meteor.user()
@@ -56,8 +56,8 @@ Meteor.methods(
   deletePlan: (planId)->
     user = Meteor.user()
     if not user
-      throw new Meteor.Error(401, "You need to login to uncomplete a task")
+      throw new Meteor.Error(401, "You need to login to delete a task")
 
+    Tasks.update({children: planId}, {$pull: {children: planId}})
     Plans.remove({_id: planId})
 )
-
