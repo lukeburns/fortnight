@@ -118,3 +118,15 @@ Template.day.events(
       swapBack(e, 'keypress', me.timestamp)
 
 )
+
+Template.day.rendered = ()->
+  me = this.data.parent.first[this.data.index]
+  timestamp = me.timestamp
+  $(this.find('.day')).droppable(
+    accept: '.day .task'
+    activeClass: 'ui-state-hover'
+    hoverClass: 'ui-state-active'
+    drop: (event, ui)->
+      id = ui.draggable.attr('id')
+      Tasks.update {_id: id}, { $set: { dueDate: timestamp + 43200 }}
+  )

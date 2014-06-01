@@ -12,16 +12,19 @@ Meteor.methods(
     if taskAttributes.parent
       parent = Tasks.findOne({_id: taskAttributes.parent})
 
-      taskWithSameDate = Tasks.findOne(
-        dueDate: taskAttributes.dueDate + 43200
-        parent: taskAttributes.parent
-      )
-
-      if taskWithSameDate
-        console.log 'Plan already exists!'
-        return
-        # TODO: Gracefully handle error popups
-        # throw new Meteor.Error(302, 'Plan already exists!', planWithSameDate._id)
+      # May not want the following if one wants to allocate multiple plans from a single task,
+      # which will be useful when scheduling is implemented.
+      #
+      # taskWithSameDate = Tasks.findOne(
+      #   dueDate: taskAttributes.dueDate + 43200
+      #   parent: taskAttributes.parent
+      # )
+      #
+      # if taskWithSameDate
+      #   console.log 'Plan already exists!'
+      #   return
+      #   # TODO: Gracefully handle error popups
+      #   # throw new Meteor.Error(302, 'Plan already exists!', planWithSameDate._id)
 
       taskAttributes.name = parent.name if !taskAttributes.name?
 

@@ -23,14 +23,17 @@ Template.planday.rendered = ()->
     hoverClass: 'ui-state-active'
     drop: (event, ui)->
       id = ui.draggable.attr('id')
-      plan =
-        parent: id
-        dueDate: timestamp
-      Meteor.call('makeTask', plan, (error,id)->
-        if error
-          Errors.throw(error.reason)
+      if ui.draggable.parent().hasClass('planday')
+        Tasks.update {_id: id}, { $set: { dueDate: timestamp + 43200 }}
+      else
+        plan =
+          parent: id
+          dueDate: timestamp
+        Meteor.call('makeTask', plan, (error,id)->
+          if error
+            Errors.throw(error.reason)
 
-          if error.error is 302
-            Meteor.Router.to('home', error.details)
-      )
+            if error.error is 302
+              Meteor.Router.to('home', error.details)
+        )
   )
