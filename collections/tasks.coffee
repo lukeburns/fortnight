@@ -24,7 +24,6 @@ Meteor.methods(
         # throw new Meteor.Error(302, 'Plan already exists!', planWithSameDate._id)
 
       taskAttributes.name = parent.name if !taskAttributes.name?
-      taskAttributes.estimate = parent.estimate if !taskAttributes.estimate?
 
     # user must be logged in
     if not user
@@ -109,7 +108,7 @@ Meteor.methods(
     task = Tasks.findOne({_id: taskId});
     if task.children?
       task.children.forEach (child) ->
-        Tasks.remove({_id: child});
+        Meteor.call('deleteTask', child)
 
     # Abandon parents
     Tasks.update({children: taskId}, {$pull: {children: taskId}})

@@ -2,7 +2,7 @@ Template.task.helpers(
   # return 'checked' if task is completed
   # return nothing is task is incomplete
   checked: ()->
-    task = Tasks.findOne( { _id: @_id })
+    task = Tasks.findOne({ _id: @_id })
     if task.completed is true
       'checked'
     else
@@ -12,7 +12,7 @@ Template.task.helpers(
 
 Template.task.events(
   'click .toggle': (e)->
-    checked = $(event.currentTarget).next().hasClass('checked')
+    checked = $(e.currentTarget).next().hasClass('checked')
 
     unless checked
       # submit check
@@ -22,32 +22,32 @@ Template.task.events(
       Meteor.call('uncompleteTask', @_id)
 
   'dblclick .taskName': (e)->
-    $this_el = $(event.currentTarget).parent()
+    $this_el = $(e.currentTarget).parent()
     $task_name = $($this_el.children()[1])
     $edit_field = $($this_el.children()[2])
     $input_cover = $($this_el.children()[3])
-    if $edit_field.css('dispay','none')
+    if $edit_field.css('display','none')
       $task_name.hide()
       $edit_field.show()
       $input_cover.show()
       $edit_field.focus()
 
   'click .taskInputCover': (e)->
-    swapBack(this, 'cover')
+    swapBack(this, e, 'cover')
 
   'keypress .nameEdit': (e)->
     if (e.keyCode == 13)
-      swapBack(this, 'key')
+      swapBack(this, e, 'key')
 
   'keypress .estimateEdit': (e)->
     if (e.keyCode == 13)
-      swapBack(this, 'key')
+      swapBack(this, e, 'key')
 
   'click .deleteTask':(e)->
     Meteor.call('deleteTask', @_id)
 )
 
-swapBack = (task, which)->
+swapBack = (task, event, which)->
   if which is 'cover'
     $this_el = $(event.currentTarget).parent()
   else
