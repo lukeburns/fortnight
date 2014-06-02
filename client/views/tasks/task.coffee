@@ -8,10 +8,23 @@ Template.task.helpers(
     else
       ''
 
+  parentId: ->
+    this.parent
+
 )
 
 Template.task.events(
+  'mouseover': (e)->
+    family = $(e.target).parent().data('family').split(' ');
+    $.each family, (i, sibling)->
+      console.log($('#'+sibling));
+      $('*[data-family*='+sibling+']').addClass('family-highlight')
+
+  'mouseout': (e)->
+    $('.family-highlight').removeClass('family-highlight')
+
   'click .toggle': (e)->
+    console.log('click')
     checked = $(e.currentTarget).next().hasClass('checked')
 
     unless checked
@@ -33,6 +46,7 @@ Template.task.events(
       $edit_field.focus()
 
   'click .taskInputCover': (e)->
+    console.log('click')
     swapBack(this, e, 'cover')
 
   'keypress .nameEdit': (e)->
@@ -67,7 +81,10 @@ swapBack = (task, event, which)->
   $input_cover.hide()
 
 Template.task.rendered = ()->
+  # $(this.find('.task')).sortable()
+  # $(this.find('.task')).parent().selectable({ filter: '.task' })
   $(this.find('.task')).draggable(
-    revert: true,
+    revert: true
     revertDuration: 0
+    # multiple: true
   )
