@@ -15,7 +15,7 @@ Template.task.helpers(
 
 Template.task.events(
   'mouseover': (e)->
-    family = $(e.target).parent().data('family').split(' ');
+    family = $(e.target).parents('.task').data('family').split(' ');
     $.each family, (i, sibling)->
       console.log($('#'+sibling));
       $('*[data-family*='+sibling+']').addClass('family-highlight')

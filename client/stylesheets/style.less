@@ -115,7 +115,7 @@ th {
     }
 }
 .taskName:hover {
-    background-color:#f4f1f5;
+    color: #006180 !important;
     cursor:pointer;
 }
 .deleteTask {
@@ -198,6 +198,9 @@ th {
         outline:0;
         font-family:'museo-sans';
     }
+    input:focus {
+        color: #006180;
+    }
 }
 .herp {
     opacity:.4;
@@ -254,8 +257,9 @@ th {
 .fivehours {
     background-color:#f5bebf;
 }
-.family-highlight .taskName {
+.family-highlight .taskName, .family-highlight .taskInputter {
     background: #DEEEF3;
+    color: #6DB9D1;
 }
 .ui-state-hover {
     border:1px dashed #CCC;
