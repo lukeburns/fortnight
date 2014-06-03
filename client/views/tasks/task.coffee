@@ -15,15 +15,16 @@ Template.task.helpers(
 
 Template.task.events(
   'mouseover': (e)->
-    family = $(e.target).parents('.task').data('family').split(' ');
-    $.each family, (i, sibling)->
-      siblingElements = $('*[data-family*='+sibling+']')
-      siblingElements.addClass('family-highlight')
+    family = $(e.target).parents('.task').data('family');
+    if family
+      $.each family.split(' '), (i, sibling)->
+        siblingElements = $('*[data-family*='+sibling+']')
+        siblingElements.addClass('family-highlight')
 
-      estimate = siblingElements.each (i, siblingElement)->
-        estimate = $(siblingElement).find('.estimateEdit').val();
-        duration = parseDuration(estimate);
-        $(siblingElement).addClass(color(duration));
+        estimate = siblingElements.each (i, siblingElement)->
+          estimate = $(siblingElement).find('.estimateEdit').val();
+          duration = parseDuration(estimate);
+          $(siblingElement).addClass(color(duration));
 
     $('td .color').addClass('over');
 
